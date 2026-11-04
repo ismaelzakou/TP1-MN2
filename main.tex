@@ -1,0 +1,103 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage[margin=2.3cm]{geometry}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  showstringspaces=false
+}
+
+\begin{document}
+
+% ===================== PAGE DE GARDE =====================
+\begin{titlepage}
+\centering
+\vspace*{1cm}
+{\Large \textbf{Institut 2iE}}\\[0.4cm]
+{\large Méthodes numériques 2 -- S4/S5D -- 2026--2027}\\[2.5cm]
+
+{\Huge \textbf{TP 01}}\\[0.6cm]
+{\LARGE Calculer une énergie avec Scilab}\\[0.4cm]
+{\large Méthode des trapèzes et méthode de Simpson}\\[2.5cm]
+
+{\large \textbf{Groupe :}}\\[0.4cm]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{|c|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{N\textsuperscript{o}} & \textbf{Nom} & \textbf{Prénom}\\
+\hline
+1 & & \\
+\hline
+2 & & \\
+\hline
+3 & & \\
+\hline
+\end{tabular}
+
+\vfill
+{\large Enseignant : Dr Babacar LEYE}\\[0.3cm]
+{\large 3 novembre 2026}
+\end{titlepage}
+
+% ===================== CONTENU =====================
+\input{partie1}
+\input{partie2}
+\input{partie3}
+
+% ===================== ANNEXE =====================
+\appendix
+\section{Code Scilab}
+\begin{lstlisting}
+// Methode des trapezes
+function q = trapezes(t, y)
+    n = length(t) - 1;
+    q = 0;
+    for i = 1:n
+        h = t(i+1) - t(i);
+        if h <= 0 then error("Temps non croissants"); end
+        aire = h * (y(i) + y(i+1)) / 2;
+        q = q + aire;
+    end
+endfunction
+
+// Methode de Simpson
+function q = simpson(t, y)
+    n = length(t) - 1;
+    if modulo(n, 2) <> 0 then error("Simpson exige n pair"); end
+    h = t(2) - t(1);
+    for i = 2:n
+        pas = t(i+1) - t(i);
+        if abs(pas - h) > 1e-10 then error("Simpson exige des pas egaux"); end
+    end
+    q = y(1) + y(n+1);
+    for i = 2:n
+        if modulo(i, 2) == 0 then
+            q = q + 4 * y(i);
+        else
+            q = q + 2 * y(i);
+        end
+    end
+    q = h / 3 * q;
+endfunction
+
+// Calcul pour la pompe
+tmin = [0 10 20 30 40];
+Pkw = [2.0 2.6 3.0 2.5 1.9];
+th = zeros(1, length(tmin));
+for i = 1:length(tmin)
+    th(i) = tmin(i) / 60;
+end
+ET = trapezes(th, Pkw);
+ES = simpson(th, Pkw);
+ecart = abs(ET - ES);
+\end{lstlisting}
+
+\end{document}

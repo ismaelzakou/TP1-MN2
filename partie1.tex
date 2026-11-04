@@ -1,0 +1,26 @@
+% ===== PARTIE 1 : objectif et méthodes (Personne A) =====
+\section{Objectif}
+Une pompe fonctionne pendant 40 minutes et sa puissance a été relevée toutes
+les 10 minutes. L'énergie consommée est l'aire sous la courbe de puissance :
+\[
+  E = \int_0^{T} P(t)\,dt .
+\]
+Comme on ne dispose que de points mesurés, on estime cette intégrale avec deux
+méthodes de quadrature programmées en Scilab : les trapèzes et Simpson.
+
+\section{Méthodes}
+\paragraph{Trapèzes.} Sur chaque intervalle $[t_i, t_{i+1}]$, on relie les deux
+points par un segment :
+\[
+  T = \sum_{i=1}^{n} (t_{i+1}-t_i)\,\frac{y_i+y_{i+1}}{2}.
+\]
+Cette méthode accepte des pas inégaux.
+
+\paragraph{Simpson.} On remplace la courbe par des paraboles sur des paires
+d'intervalles :
+\[
+  S = \frac{h}{3}\Bigl[y_1 + y_{n+1} + 4(y_2+y_4+\dots+y_n)
+      + 2(y_3+y_5+\dots+y_{n-1})\Bigr].
+\]
+Elle exige des pas égaux et un nombre $n$ pair de sous-intervalles. La fonction
+programmée refuse les autres cas avec un message d'erreur.
